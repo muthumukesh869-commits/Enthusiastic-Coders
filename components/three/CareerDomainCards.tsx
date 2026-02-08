@@ -5,7 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import { Float, Text, Center } from "@react-three/drei";
 import * as THREE from "three";
 
-const domains = [
+const domains: { name: string; color: string; position: [number, number, number] }[] = [
     { name: "AI/ML", color: "#00d4ff", position: [-3, 2, 0] },
     { name: "Web Dev", color: "#a855f7", position: [3, 2, 0] },
     { name: "Data Science", color: "#10b981", position: [-3, -2, 0] },
