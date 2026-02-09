@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String?
+  name          String?
+  googleId      String?   @unique
+  profile       Profile?
+  resumes       Resume[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Profile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id])
+  interests       String[]
+  skills          Skill[]
+  currentRoadmap  Roadmap?
+  onboardingStatus String   @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, COMPLETED
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Skill {
+  id          String   @id @default(cuid())
+  name        String
+  category    String   // Technical, Soft, Interest
+  proficiency Int      @default(0) // 0-100
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id])
+  updatedAt   DateTime @updatedAt
+}
+
+model Roadmap {
+  id          String   @id @default(cuid())
+  domain      String
+  profileId   String   @unique
+  profile     Profile  @relation(fields: [profileId], references: [id])
+  modules     Module[]
+  progress    Int      @default(0) // 0-100
+  status      String   @default("IN_PROGRESS") // IN_PROGRESS, COMPLETED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Module {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  order       Int
+  status      String     @default("LOCKED") // LOCKED, UNLOCKED, COMPLETED
+  roadmapId   String
+  roadmap     Roadmap    @relation(fields: [roadmapId], references: [id])
+  resources   Resource[]
+  skills      String[]   // Skills covered in this module
+}
+
+model Resource {
+  id          String   @id @default(cuid())
+  title       String
+  type        String   // Video, Article, Document, Practice
+  url         String
+  moduleId    String
+  module      Module   @relation(fields: [moduleId], references: [id])
+}
+
+model Resume {
+  id          String   @id @default(cuid())
+  filename    String
+  url         String
+  atsScore    Int?
+  analysis    Json?    // Detailed AI analysis
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  logo        String?
+  type        String   // MNC, Startup, Research
+  location    String?
+  hiringStatus String?
+  pattern     Json?    // Hiring patterns, common requirements
+  roles       Role[]
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  title       String
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  requirements String[]
+}
