@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Float, Text, Center } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -63,15 +63,19 @@ function DomainCard({ name, color, position }: { name: string; color: string; po
 }
 
 export default function CareerDomainCards() {
+    const { viewport } = useThree();
+    const isMobile = viewport.width < 8;
+    const scale = isMobile ? viewport.width / 10 : 1;
+
     return (
-        <>
+        <group scale={scale}>
             {domains.map((domain, index) => (
                 <DomainCard key={index} {...domain} />
             ))}
 
             {/* Particles */}
             <Points />
-        </>
+        </group>
     );
 }
 

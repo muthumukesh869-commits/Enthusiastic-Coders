@@ -130,7 +130,7 @@ export default function AIChat() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed bottom-24 right-6 z-50 w-96 h-[600px] glass-card flex flex-col overflow-hidden shadow-2xl"
+                        className="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-96 h-[500px] sm:h-[600px] glass-card flex flex-col overflow-hidden shadow-2xl"
                     >
                         {/* Header */}
                         <div className="p-4 border-b border-white/10 bg-gradient-to-r from-neon-blue/20 to-neon-purple/20">
