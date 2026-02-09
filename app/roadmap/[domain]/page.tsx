@@ -8,63 +8,95 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
-const roadmapData = {
-    title: "AI/ML Engineering Roadmap",
-    totalWeeks: 16,
-    modules: [
-        {
-            id: 1,
-            title: "Python Fundamentals",
-            week: "Week 1-2",
-            status: "completed",
-            progress: 100,
-            skills: ["Python Basics", "Data Structures", "OOP"],
-            resources: [
-                { type: "video", title: "Python Crash Course", duration: "4h" },
-                { type: "article", title: "Python Best Practices", duration: "30min" },
-                { type: "practice", title: "100 Python Exercises", duration: "10h" },
-            ],
-        },
-        {
-            id: 2,
-            title: "Mathematics for ML",
-            week: "Week 3-4",
-            status: "in-progress",
-            progress: 60,
-            skills: ["Linear Algebra", "Calculus", "Statistics"],
-            resources: [
-                { type: "video", title: "Linear Algebra Essentials", duration: "6h" },
-                { type: "article", title: "Statistics for ML", duration: "1h" },
-                { type: "practice", title: "Math Problems Set", duration: "8h" },
-            ],
-        },
-        {
-            id: 3,
-            title: "Machine Learning Basics",
-            week: "Week 5-8",
-            status: "locked",
-            progress: 0,
-            skills: ["Supervised Learning", "Unsupervised Learning", "Model Evaluation"],
-            resources: [
-                { type: "video", title: "ML Fundamentals", duration: "12h" },
-                { type: "article", title: "Scikit-learn Guide", duration: "2h" },
-                { type: "practice", title: "ML Projects", duration: "20h" },
-            ],
-        },
-        {
-            id: 4,
-            title: "Deep Learning",
-            week: "Week 9-12",
-            status: "locked",
-            progress: 0,
-            skills: ["Neural Networks", "CNN", "RNN"],
-            resources: [
-                { type: "video", title: "Deep Learning Specialization", duration: "20h" },
-                { type: "article", title: "TensorFlow Tutorial", duration: "3h" },
-                { type: "practice", title: "DL Projects", duration: "30h" },
-            ],
-        },
-    ],
+import { use } from "react";
+
+const allRoadmaps: Record<string, any> = {
+    ai: {
+        title: "AI/ML Engineering Roadmap",
+        totalWeeks: 16,
+        modules: [
+            {
+                id: 1,
+                title: "Python Fundamentals",
+                week: "Week 1-2",
+                status: "completed",
+                progress: 100,
+                skills: ["Python Basics", "Data Structures", "OOP"],
+                resources: [
+                    { type: "video", title: "Python Crash Course", duration: "4h" },
+                    { type: "article", title: "Python Best Practices", duration: "30min" },
+                    { type: "practice", title: "100 Python Exercises", duration: "10h" },
+                ],
+            },
+            {
+                id: 2,
+                title: "Mathematics for ML",
+                week: "Week 3-4",
+                status: "in-progress",
+                progress: 60,
+                skills: ["Linear Algebra", "Calculus", "Statistics"],
+                resources: [
+                    { type: "video", title: "Linear Algebra Essentials", duration: "6h" },
+                    { type: "article", title: "Statistics for ML", duration: "1h" },
+                    { type: "practice", title: "Math Problems Set", duration: "8h" },
+                ],
+            },
+            {
+                id: 3,
+                title: "Machine Learning Basics",
+                week: "Week 5-8",
+                status: "locked",
+                progress: 0,
+                skills: ["Supervised Learning", "Unsupervised Learning", "Model Evaluation"],
+                resources: [
+                    { type: "video", title: "ML Fundamentals", duration: "12h" },
+                    { type: "article", title: "Scikit-learn Guide", duration: "2h" },
+                    { type: "practice", title: "ML Projects", duration: "20h" },
+                ],
+            },
+        ],
+    },
+    web: {
+        title: "Full Stack Web Development Roadmap",
+        totalWeeks: 12,
+        modules: [
+            {
+                id: 1,
+                title: "Frontend Basics (HTML/CSS)",
+                week: "Week 1",
+                status: "completed",
+                progress: 100,
+                skills: ["Semantic HTML", "CSS Flexbox/Grid", "Responsive Design"],
+                resources: [
+                    { type: "video", title: "Modern CSS Course", duration: "3h" },
+                    { type: "practice", title: "Build a Portfolio Site", duration: "5h" },
+                ],
+            },
+            {
+                id: 2,
+                title: "JavaScript Mastery",
+                week: "Week 2-4",
+                status: "in-progress",
+                progress: 40,
+                skills: ["ES6+", "Async/Await", "DOM Manipulation"],
+                resources: [
+                    { type: "video", title: "JS Deep Dive", duration: "8h" },
+                    { type: "article", title: "MDN JS Guide", duration: "2h" },
+                ],
+            },
+            {
+                id: 3,
+                title: "React & Next.js",
+                week: "Week 5-8",
+                status: "locked",
+                progress: 0,
+                skills: ["Hooks", "Server Components", "Routing"],
+                resources: [
+                    { type: "video", title: "Next.js 15 Masterclass", duration: "10h" },
+                ],
+            },
+        ],
+    },
 };
 
 const getStatusIcon = (status: string) => {
@@ -79,10 +111,14 @@ const getResourceIcon = (type: string) => {
     return <Book className="w-4 h-4" />;
 };
 
-export default function RoadmapPage() {
+export default function RoadmapPage({ params: paramsPromise }: { params: Promise<{ domain: string }> }) {
+    const params = use(paramsPromise);
+    const domain = params.domain || "ai";
+    const roadmapData = allRoadmaps[domain] || allRoadmaps["ai"];
+
     const [expandedModule, setExpandedModule] = useState<number | null>(1);
 
-    const overallProgress = roadmapData.modules.reduce((acc, m) => acc + m.progress, 0) / roadmapData.modules.length;
+    const overallProgress = roadmapData.modules.reduce((acc: number, m: any) => acc + m.progress, 0) / roadmapData.modules.length;
 
     return (
         <div className="min-h-screen p-6 md:p-10">
@@ -111,7 +147,7 @@ export default function RoadmapPage() {
 
                 {/* Timeline */}
                 <div className="space-y-4">
-                    {roadmapData.modules.map((module, index) => (
+                    {roadmapData.modules.map((module: any, index: number) => (
                         <motion.div
                             key={module.id}
                             initial={{ opacity: 0, x: -20 }}
@@ -145,7 +181,7 @@ export default function RoadmapPage() {
 
                                             {/* Skills */}
                                             <div className="flex flex-wrap gap-2">
-                                                {module.skills.map((skill, idx) => (
+                                                {module.skills.map((skill: string, idx: number) => (
                                                     <Badge key={idx} variant="outline" className="text-xs">
                                                         {skill}
                                                     </Badge>
@@ -165,7 +201,7 @@ export default function RoadmapPage() {
                                             className="space-y-3 pt-4 border-t border-white/10"
                                         >
                                             <h4 className="font-semibold mb-3">Learning Resources</h4>
-                                            {module.resources.map((resource, idx) => (
+                                            {module.resources.map((resource: any, idx: number) => (
                                                 <div
                                                     key={idx}
                                                     className="flex items-center justify-between p-3 glass rounded-lg hover:bg-white/10 transition-colors"

@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   keywords: ["career guidance", "AI", "campus placements", "college students", "career path"],
 };
 
+import Navbar from "@/components/Navbar";
+import AuthProvider from "@/components/providers/AuthProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -15,7 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="antialiased font-sans">
-        {children}
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
